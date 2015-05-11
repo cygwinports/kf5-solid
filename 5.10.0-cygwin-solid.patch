@@ -1,0 +1,37 @@
+--- origsrc/solid-5.10.0/autotests/CMakeLists.txt	2015-05-03 10:28:13.000000000 -0500
++++ src/solid-5.10.0/autotests/CMakeLists.txt	2015-05-11 12:36:01.814134100 -0500
+@@ -11,7 +11,7 @@ target_compile_definitions(fakehardwaret
+ 
+ ########### halbasictest ###############
+ 
+-if(NOT WIN32 AND NOT APPLE AND NOT CMAKE_SYSTEM_NAME MATCHES Linux)
++if(NOT WIN32 AND NOT APPLE AND NOT CYGWIN AND NOT CMAKE_SYSTEM_NAME MATCHES Linux)
+     ecm_add_test(halbasictest.cpp LINK_LIBRARIES KF5Solid_static Qt5::DBus Qt5::Xml Qt5::Test)
+ endif()
+ 
+--- origsrc/solid-5.10.0/src/solid/devices/CMakeLists.txt	2015-05-03 10:28:13.000000000 -0500
++++ src/solid-5.10.0/src/solid/devices/CMakeLists.txt	2015-05-11 12:42:20.387206800 -0500
+@@ -100,7 +100,7 @@ if(NOT WIN32 AND NOT APPLE)
+    message(STATUS "Building Solid fstab backend." )
+    include(devices/backends/fstab/CMakeLists.txt)
+ 
+-    if (NOT CMAKE_SYSTEM_NAME MATCHES Linux)
++    if (NOT CYGWIN AND NOT CMAKE_SYSTEM_NAME MATCHES Linux)
+         message(STATUS "Building Solid HAL backend." )
+         include(devices/backends/hal/CMakeLists.txt)
+     endif()
+--- origsrc/solid-5.10.0/src/solid/devices/managerbase.cpp	2015-05-03 10:28:13.000000000 -0500
++++ src/solid-5.10.0/src/solid/devices/managerbase.cpp	2015-05-11 12:37:03.902518400 -0500
+@@ -70,10 +70,10 @@ void Solid::ManagerBasePrivate::loadBack
+ 
+ #        elif defined(Q_OS_WIN) && !defined(_WIN32_WCE)
+         m_backends << new Solid::Backends::Win::WinDeviceManager(0);
+-#        elif defined(Q_OS_UNIX) && !defined(Q_OS_LINUX)
++#        elif defined(Q_OS_UNIX) && !defined(Q_OS_LINUX) && !defined(Q_OS_CYGWIN)
+         m_backends << new Solid::Backends::Hal::HalManager(0);
+ 
+-#        elif defined(Q_OS_LINUX)
++#        elif defined(Q_OS_LINUX) || defined(Q_OS_CYGWIN)
+ #               if UDEV_FOUND
+             m_backends << new Solid::Backends::UDev::UDevManager(0);
+             m_backends << new Solid::Backends::UDisks2::Manager(0);

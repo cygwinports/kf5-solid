@@ -1,0 +1,29 @@
+inherit kf5
+
+NAME="kf5-solid"
+VERSION=5.10.0
+RELEASE=1
+CATEGORY="Libs"
+SUMMARY="KDE 5 hardware abstraction library"
+DESCRIPTION="Solid is a device integration framework.  It provides a way of
+querying and interacting with hardware independently of the underlying
+operating system."
+
+PATCH_URI="5.10.0-cygwin-solid.patch"
+
+PKG_NAMES="libKF5Solid5 libKF5Solid-devel"
+libKF5Solid5_CONTENTS="
+	usr/bin/cygKF5Solid-5.dll
+	usr/bin/solid-hardware5.exe
+	${QT5_QMLDIR#/}/org/kde/solid/
+	usr/share/doc/
+	usr/share/locale/
+"
+libKF5Solid_devel_REQUIRES="libQt5Core-devel"
+libKF5Solid_devel_CONTENTS="
+	usr/include/KF5/Solid/
+	usr/include/KF5/solid_version.h
+	usr/lib/cmake/KF5Solid/
+	${QT5_MKSPECSDIR#/}/modules/qt_Solid.pri
+	usr/lib/libKF5Solid.dll.a
+"
